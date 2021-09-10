@@ -1,6 +1,3 @@
-
-![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/2/Screenshot_5.png)
-
 # ConfigMap & Secrets
 ```bash
 kubectl create secret generic connection-string --from-literal=DATABASE_URL=postgres://connect --dry-run -o yaml > secret.yaml
@@ -114,8 +111,10 @@ cat /etc/resolv.conf
 
 Сравните IP адрес DNS сервера в поде и DNS сервиса кластера Kubernetes.
 
+### DNS сервера в поде
 ![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/2/dns_pod.png)
 
+### DNS сервиса кластера Kubernetes
 ![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/2/dns_cluster.png)
 
 
@@ -128,7 +127,6 @@ _потребуется установить пакет dnsutils_
 
 ### Headless
 ![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/2/nslookup_headless.png)
-
 
 
 # [Ingress](https://kubernetes.github.io/ingress-nginx/deploy/#minikube)
