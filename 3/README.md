@@ -33,7 +33,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
-``
+```
 ![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/3/pv_pvc.png)
 
 ## Creating StatefulSet
