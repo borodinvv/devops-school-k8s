@@ -17,7 +17,7 @@ spec:
     type: Directory
 ```
 
-![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/3/pv_pvc.png)
+![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/3/part_1/pv_pvc.png)
 
 ## Creating PVC
 `pvc.yaml`
@@ -34,7 +34,7 @@ spec:
     requests:
       storage: 1Gi
 ```
-![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/3/pv_pvc.png)
+![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/3/part_1/pv_pvc.png)
 
 ## Creating StatefulSet
 `statefulset.yaml`
@@ -86,4 +86,4 @@ spec:
         requests:
           storage: 1Gi
 ```
-![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/3/statefulset.png)
+![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/3/part_1/statefulset.png)
