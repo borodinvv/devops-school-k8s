@@ -1,30 +1,65 @@
-# Create deployment with ConfigMap
+# Create PV, PVC and StatefulSet
+## Creating PV
 
-## Creating ConfigMap
-
-`configmap.yaml`
+`pv.yaml`
 ```yaml
 apiVersion: v1
-kind: ConfigMap
+kind: PersistentVolume
 metadata:
-  name: nginx-demo
-data:
-  index.html: |
-    Hello, world!
+  name: my-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /tmp/data
+    type: Directory
 ```
 
-## Creating Deployment
+![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/3/pv_pvc.png)
 
-`deployment.yaml`
+## Creating PVC
+`pvc.yaml`
 ```yaml
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: nginx-deployment
+  name: my-pvc
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+```
+![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/3/pv_pvc.png)
+
+## Creating StatefulSet
+`statefulset.yaml`
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
   labels:
     app: nginx
 spec:
-  replicas: 3
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  serviceName: "nginx"
+  replicas: 2
   selector:
     matchLabels:
       app: nginx
@@ -34,57 +69,21 @@ spec:
         app: nginx
     spec:
       containers:
-        - name: nginx
-          image: nginx:1.19.3
-          ports:
-            - containerPort: 80
-          volumeMounts:
-            - name: html
-              mountPath: "/usr/share/nginx/html"
-              readOnly: true
-      volumes:
-        - name: html
-          configMap:
-            name: nginx-demo
-            items:
-              - key: "index.html"
-                path: "index.html"
+      - name: nginx
+        image: k8s.gcr.io/nginx-slim:0.8
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
 ```
-
-## Creating Service
-
-`service.yaml`
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-app
-spec:
-  type: NodePort
-  selector:
-    app: nginx
-  ports:
-    - port: 80
-      nodePort: 30007
-```
-
-![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/4/Screenshot_1.png)
-
-Get service address:
-
-```bash
-minikube service --url nginx-app
-```
-
-![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/4/Screenshot_2.png)
-
-![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/4/Screenshot_3.png)
-
-## Task with *
-
-Replace NodePort service with LoadBalancer
-
-![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/4/Screenshot_4.png)
-
-![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/4/Screenshot_5.png)
-
+![alt text](https://github.com/borodinvv/devops-school-k8s/raw/master/3/statefulset.png)
